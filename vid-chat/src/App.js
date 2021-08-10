@@ -35,7 +35,7 @@ function App() {
         socket.on("me", (id) => {
             setMe(id);
         });
-
+        //listen for events called "callUser"
         socket.on("callUser", (data) => {
             setReceivingCall(true);
             setCaller(data.from);
@@ -70,6 +70,7 @@ function App() {
             stream: stream,
         });
         peer.on("signal", (data) => {
+            //emit "callUser" with data {} -> server.js will pick it up
             socket.emit("callUser", {
                 userToCall: id,
                 signalData: data,

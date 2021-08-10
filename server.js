@@ -16,8 +16,9 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         socket.broadcast.emit("callEnded");
     });
-
+    //listening for "callUser" (incoming from App.js)
     socket.on("callUser", (data) => {
+        // io to individual socketid , emit(eventName, eventData)
         io.to(data.userToCall).emit("callUser", {
             signal: data.signalData,
             from: data.from,
