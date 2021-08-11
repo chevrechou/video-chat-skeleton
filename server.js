@@ -18,7 +18,7 @@ io.on("connection", (socket) => {
     });
     //listening for "callUser" (incoming from App.js)
     socket.on("callUser", (data) => {
-        // io to individual socketid , emit(eventName, eventData)
+        // io to individual socketid , emit(eventName, eventData), pick up by useEffect and update state
         io.to(data.userToCall).emit("callUser", {
             signal: data.signalData,
             from: data.from,

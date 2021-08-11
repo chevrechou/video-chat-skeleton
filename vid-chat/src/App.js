@@ -35,7 +35,7 @@ function App() {
         socket.on("me", (id) => {
             setMe(id);
         });
-        //listen for events called "callUser"
+        //listen for events called "callUser" from socket (server)
         socket.on("callUser", (data) => {
             setReceivingCall(true);
             setCaller(data.from);
@@ -64,12 +64,15 @@ function App() {
     };
 
     const callUser = (id) => {
+        console.log("calling...", id);
         const peer = new Peer({
             initiator: true,
             trickle: false,
             stream: stream,
         });
         peer.on("signal", (data) => {
+            console.log("signal...", id);
+
             //emit "callUser" with data {} -> server.js will pick it up
             socket.emit("callUser", {
                 userToCall: id,
@@ -81,6 +84,7 @@ function App() {
         peer.on("stream", (stream) => {
             userVideo.current.srcObject = stream;
         });
+        // listen for "callAccepted", then establish connection when other user accepts call (incoming from server)
         socket.on("callAccepted", (signal) => {
             setCallAccepted(true);
             peer.signal(signal);
@@ -186,7 +190,7 @@ function App() {
                                 <PhoneIcon fontSize="large" />
                             </IconButton>
                         )}
-                        {idToCall}
+                        {idToCall} {me}
                     </div>
                 </div>
                 <div>
